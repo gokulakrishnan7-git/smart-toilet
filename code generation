@@ -1,0 +1,36 @@
+#include <Servo.h>
+
+Servo myServo;  // Create a Servo object
+const int buttonPin = 2;  // Pin for the push button
+const int relayPin = 8;    // Pin for the relay
+const int irSensorPin = 3; // Pin for the IR sensor (digital)
+int buttonState = 0;       // Variable for reading the button status
+int irSensorState = 0;     // Variable for reading the IR sensor state
+
+void setup() {
+  myServo.attach(9);      // Attach the servo to pin 9
+  pinMode(buttonPin, INPUT); // Set button pin as input
+  pinMode(relayPin, OUTPUT); // Set relay pin as output
+  pinMode(irSensorPin, INPUT); // Set IR sensor pin as input
+  digitalWrite(relayPin, LOW); // Ensure relay is off
+  Serial.begin(9600); // Start serial communication at 9600 baud
+}
+
+void loop() {
+buttonState = digitalRead(buttonPin); // Read the state of the button
+  irSensorState = digitalRead(irSensorPin); // Read the state of the IR sensor
+
+  // Print the states to the serial monitor for debugging
+  Serial.print("Button State: ");
+  Serial.print(buttonState);
+  Serial.print(" | IR Sensor State: ");
+  Serial.println(irSensorState);
+
+  if (buttonState == HIGH || irSensorState == HIGH) { // If the button is pressed or IR sensor detects something
+    myServo.write(90);      // Move the servo to 90 degrees
+    digitalWrite(relayPin, HIGH); // Turn on the relay
+  } else {
+    myServo.write(0);       // Move the servo back to 0 degrees
+    digitalWrite(relayPin, LOW); // Turn off the relay
+  }
+}
